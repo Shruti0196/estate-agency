@@ -2,7 +2,7 @@ import React from "react";
 import './Header.css'
 
 
-const Header = () => {
+function Header() {
     const headerList = ["Buy", "Rent", "Favorites", "Contact Us"];
     return (
         <>
