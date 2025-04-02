@@ -1,0 +1,10 @@
+.card {
+    display: block;
+    height: 50px;
+    background-color: var(--light-blue);
+}
+
+.house-list {
+    display: grid;
+    gap: 5px;
+}
