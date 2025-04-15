@@ -14,8 +14,22 @@ function ReusableHouseListCardView({ pageType }) {
     const navigate = useNavigate();
     async function fetchHouseData(params) {
         try {
+            const token = localStorage.getItem('access_token');
             const params = new URLSearchParams(filter)
-            const response = await fetch(`${import.meta.env.VITE_API_URL}${pageType}/?${params}`)
+            console.log('pageee', pageType)
+            const response = await fetch(`${import.meta.env.VITE_API_URL}${pageType}/?${params}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            })
+
+            if (response.status === 401) {
+                // Optionally redirect to login:
+                navigate('/');
+            }
+
             if (!response.ok) {
                 throw new Error('Not ok');
             }

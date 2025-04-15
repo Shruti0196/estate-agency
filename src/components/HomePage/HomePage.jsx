@@ -1,9 +1,13 @@
 import React from 'react'
 import ReusableHouseListCardView from '../ReusableHouseListCardView/ReusableHouseListCardView'
+import Header from '../Header/Header';
 
 function HomePage() {
     return (
-        <ReusableHouseListCardView pageType="houses"></ReusableHouseListCardView>
+        <>
+            <Header />
+            <ReusableHouseListCardView pageType="houses"></ReusableHouseListCardView>
+        </>
     )
 }
 
