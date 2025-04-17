@@ -7,96 +7,166 @@ import { TextField, List, ListItem, Typography, Select, MenuItem, Button, Grid, 
 import { useEffect, useState } from 'react'
 import Filter from '../../utils/classes/Filter'
 import KeyboardDoubleArrowRightOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowRightOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+// import { useEffect, useState } from 'react';
 
-function ReusableHouseListCardView({ pageType }) {
-    const [houseData, setHouseData] = useState([])
-    const [filter, setFilter] = useState(new Filter())
+function ReusableHouseListCardView({ houseData }) {
+    // const [houseData, setHouseData] = useState([])
+    // const [filter, setFilter] = useState(new Filter())
     const navigate = useNavigate();
-    async function fetchHouseData(params) {
-        try {
-            const token = localStorage.getItem('access_token');
-            const params = new URLSearchParams(filter)
-            console.log('pageee', pageType)
-            const response = await fetch(`${import.meta.env.VITE_API_URL}${pageType}/?${params}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            })
 
-            if (response.status === 401) {
-                // Optionally redirect to login:
-                navigate('/');
-            }
 
-            if (!response.ok) {
-                throw new Error('Not ok');
-            }
-            const result = await response.json();
-            console.log('resutl', result)
-            setHouseData(result);
-        } catch (error) {
-            console.error('Error: ', error)
-        }
-    }
+    const [localHouseData, setLocalHouseData] = useState(houseData || []);
     useEffect(() => {
+        setLocalHouseData(houseData || []);
+        const token = localStorage.getItem('access_token');
+        const socket = new WebSocket(`ws://localhost:8000/ws/api/favorites/?token=${token}`);
 
-        fetchHouseData();
-        const params = new URLSearchParams(filter)
-        let url = `ws://localhost:8000/ws/api/${pageType}/?${params}`
-        const socket = new WebSocket(url)
-        socket.onmessage = function (e) {
-            let data = JSON.parse(e.data)
-            if (data.message === 'update') {
-                fetchHouseData();
+        socket.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            console.log('DATTTTTTTTAAAAAAAA', data)
+            if (data.message === 'favorite_update') {
+                console.log('innnn')
+                const favoriteHouseIds = data.favorites; // list of house IDs the user has favorited
+
+                setLocalHouseData(prev =>
+                    prev.map(house => ({
+                        ...house,
+                        is_favorite: favoriteHouseIds.includes(house.id)
+                    }))
+                );
+                // fetchHouseData()
+                console.log('houseeeeee', localHouseData)
+
             }
-        }
+        };
+
+        socket.onopen = () => {
+            console.log("WebSocket connected");
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket error", error);
+        };
+
+
 
         socket.onclose = () => {
-            console.log("WebSocket disconnected");
+            console.log('Favorites WebSocket disconnected');
         };
 
         return () => socket.close();
-    }, [filter])
+    }, [houseData]);
+    // async function fetchHouseData(params) {
+    //     try {
+    //         const token = localStorage.getItem('access_token');
+    //         console.log('Tokennnnnn', token)
+    //         const params = new URLSearchParams(filter)
+    //         const response = await fetch(`${import.meta.env.VITE_API_URL}houses/?${params}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`,
+    //             }
+    //         })
 
-    function setFilterData(event) {
-        setFilter({ ...filter, [event.target.name]: event.target.value })
-        console.log('Filter', filter)
-    }
+    //         if (response.status === 401) {
+    //             // Optionally redirect to login:
+    //             navigate('/');
+    //         }
+
+    //         if (!response.ok) {
+    //             throw new Error('Not ok');
+    //         }
+    //         const result = await response.json();
+    //         console.log('resutl', result)
+    //         setHouseData(result);
+    //     } catch (error) {
+    //         console.error('Error: ', error)
+    //     }
+    // }
+
+    // useEffect(() => {
+
+    // }, [localHouseData]);
+
+
+    const handleFavorite = async (houseId) => {
+        const token = localStorage.getItem('access_token');
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}houses/${houseId}/favorite/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+        } catch (err) {
+            console.error('Error favoriting house', err);
+        }
+    };
+
+    const handleUnfavorite = async (houseId) => {
+        const token = localStorage.getItem('access_token');
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}houses/${houseId}/unfavorite/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (res.ok) {
+                // fetchHouseData(); // Refresh list to update is_favorite
+                // const token = localStorage.getItem('access_token');
+                // console.log('Tokennnnnn', token)
+                // // const params = new URLSearchParams(filter)
+                // const response = await fetch(`${import.meta.env.VITE_API_URL}houses/?status=buy`, {
+                //     method: 'GET',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'Authorization': `Bearer ${token}`,
+                //     }
+                // })
+                // cardData = await response.json();
+                // setHouseData(cardData)
+                // console.log('Card dataaaaaa', cardData)
+            }
+        } catch (err) {
+            console.error('Error unfavoriting house', err);
+        }
+    };
 
     const handleIconClick = (id) => {
         // Redirect to a new route
+        console.log(id)
         navigate(`house/${id}`);
     };
 
     return (
         <>
-            <div className="filter-container">
-                <Select
-                    label="Search Houses"
-                    variant="outlined"
-                    fullWidth
-                    onChange={setFilterData}
-                    key="filter"
-                    name="status"
-                    className="flex-item select-field"
-                >
-                    <MenuItem value="all">All</MenuItem>
-                    <MenuItem value="buy">Buy</MenuItem>
-                    <MenuItem value="rent">Rent</MenuItem>
-                </Select>
-                <TextField
-                    onChange={setFilterData}
-                    name="price"
-                    className="flex-item text-field"
-                />
-            </div>
+
             <div className="house-list">
-                {houseData.map((data) => (
+                {localHouseData.map((data) => (
                     <Fragment key={data.id}>
                         <ReusableCard cardData={data} key={data.id} className="card"
-                            dynamicContent={<KeyboardDoubleArrowRightOutlinedIcon onClick={() => handleIconClick(data.id)} className="see-more-icon" />} />
+                            dynamicContent={
+                                <>
+                                    {data.is_favorite ? (
+                                        <FavoriteIcon
+                                            color="error"
+                                            onClick={() => handleUnfavorite(data.id)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    ) : (
+                                        <FavoriteBorderIcon
+                                            onClick={() => handleFavorite(data.id)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    )}
+                                    <KeyboardDoubleArrowRightOutlinedIcon onClick={() => handleIconClick(data.id)} className="see-more-icon" />
+                                </>} />
                     </Fragment>
                 ))}
             </div>

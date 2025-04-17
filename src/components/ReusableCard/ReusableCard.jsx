@@ -1,8 +1,13 @@
 import { Card, CardActions, CardContent } from '@mui/material';
 import './ReusableCard.css'
 import CurrencyRupeeOutlinedIcon from '@mui/icons-material/CurrencyRupeeOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useEffect, useState } from 'react';
 
 function ReusableCard({ cardData = {}, dynamicContent = <></> }) {
+
+
     return (
         <Card key={cardData.id} className="card">
             <CardContent>
@@ -17,6 +22,8 @@ function ReusableCard({ cardData = {}, dynamicContent = <></> }) {
             </CardContent>
             <CardActions className='card-actions'>
                 <div className='status-div'>{cardData.status}</div>
+
+
                 {dynamicContent}
             </CardActions>
 

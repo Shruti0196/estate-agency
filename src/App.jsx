@@ -5,6 +5,7 @@ import HomePage from './components/HomePage/HomePage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ViewHousePage from './components/ViewHousePage/ViewHousePage'
 import LandingPage from './components/LandingPage/LandingPage'
+import FavoritesPage from './components/FavoritesPage/FavoritesPage'
 
 function App() {
   const [data, setData] = useState([])
@@ -14,9 +15,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />}></Route>
-          <Route path="house/:id" element={<ViewHousePage />}></Route>
+          <Route path="homePage/house/:id" element={<ViewHousePage />}></Route>
           <Route path="homePage" element={<HomePage />}></Route>
-
+          <Route path="favorites" element={<FavoritesPage />}></Route>
         </Routes>
       </Router>
 

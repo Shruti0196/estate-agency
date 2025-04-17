@@ -12,14 +12,20 @@ function Header() {
         // Redirect to login or home page
         navigate('/');
     };
+
+    const navigateToFavoritesPage = () => {
+        navigate('/favorites')
+    }
     return (
         <>
             <div className="header">
                 <img src="estate-agency-logo.svg" className="logo"></img>
                 <div className="headerList">
-                    {headerList.map((headerData) => (
-                        <button key={headerData} onClick={logout}> {headerData} </button>))
-                    }
+                    {/* {headerList.map((headerData) => ( */}
+                    <button key="navigateToFavoritesPage" onClick={navigateToFavoritesPage}> Favorites </button>
+                    <button key="logout" onClick={logout}> Logout </button>
+
+                    {/* } */}
                 </div>
             </div>
         </>

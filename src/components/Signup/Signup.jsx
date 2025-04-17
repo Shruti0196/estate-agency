@@ -1,11 +1,11 @@
 // Signup.js
 import { useState } from 'react';
-import axios from 'axios';
 import { Container } from '@mui/material';
 import FormCard from '../FormCard/FormCard.jsx';
-// FormCard
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -38,7 +38,7 @@ const Signup = () => {
             console.log('result', result)
             if (response.ok) {
                 // setMessage('User registered successfully!');
-                router.push('/login')
+                navigate('/login')
             }
         } catch (error) {
             // setMessage('An error occurred');
