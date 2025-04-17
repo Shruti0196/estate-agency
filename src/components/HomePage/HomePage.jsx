@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, List, ListItem, Typography, Select, MenuItem, Button, Grid, Paper } from '@mui/material';
 import { useEffect } from 'react'
 import Filter from '../../utils/classes/Filter'
+import './HomePage.css'
 
 function HomePage() {
     const [houseData, setHouseData] = useState([])
@@ -73,14 +74,18 @@ function HomePage() {
             <Header />
             <div className="filter-container">
                 <Select
-                    label="Search Houses"
                     variant="outlined"
                     fullWidth
                     onChange={setFilterData}
+                    displayEmpty
                     key="filter"
                     name="status"
                     className="flex-item select-field"
+                    defaultValue=""  // <-- important for controlled component
                 >
+                    <MenuItem value="" disabled>
+                        <em>Select Status</em>
+                    </MenuItem>
                     <MenuItem value="all">All</MenuItem>
                     <MenuItem value="buy">Buy</MenuItem>
                     <MenuItem value="rent">Rent</MenuItem>
@@ -88,7 +93,9 @@ function HomePage() {
                 <TextField
                     onChange={setFilterData}
                     name="price"
+                    label="Filter by Price"
                     className="flex-item text-field"
+                    placeholder="Enter max price"
                 />
             </div>
             <ReusableHouseListCardView houseData={houseData}></ReusableHouseListCardView>

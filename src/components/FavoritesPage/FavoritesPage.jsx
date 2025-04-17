@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReusableHouseListCardView from '../ReusableHouseListCardView/ReusableHouseListCardView';
+import Header from '../Header/Header';
 
 function FavoritesPage() {
     const [houseData, setHouseData] = useState([]);
@@ -46,7 +47,10 @@ function FavoritesPage() {
     }, []);
 
     return (
-        <ReusableHouseListCardView pageType="favorites" houseData={houseData} />
+        <>
+            <Header />
+            <ReusableHouseListCardView pageType="favorites" houseData={houseData} />
+        </>
     );
 }
 

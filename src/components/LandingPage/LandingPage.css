@@ -1,4 +1,21 @@
-.landing-page {
+.display-image {
     margin: 10%;
     height: 400px;
+    width: 30%;
 }
+
+.landing-page {
+    display: flex;
+}
+
+.right-div {
+    width: 40%;
+    text-transform: capitalize;
+    /* align-items: center; */
+    align-content: space-evenly;
+    text-align: center;
+}
+
+/* button {
+    margin: 50px;
+} */

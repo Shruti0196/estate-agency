@@ -9,27 +9,25 @@ const FormCard = ({ formData, onChange, onSubmit }) => {
     };
 
     return (
-        <Card>
-            <CardContent>
-                <Typography variant="h5">Form Card</Typography>
-                <form onSubmit={onSubmit}>
-                    {
-                        Object.entries(formData).map(([key, value]) => {
-                            console.log(`Key: ${key}, Value: ${value}`);
-                            return (<TextField
-                                label={key}
-                                name={key}
-                                value={value}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                            />)
-                        })
-                    }
-                    <Button type="submit" variant="contained">Submit</Button>
-                </form>
-            </CardContent>
-        </Card>
+
+        <>
+            <form onSubmit={onSubmit}>
+                {
+                    Object.entries(formData).map(([key, value]) => {
+                        console.log(`Key: ${key}, Value: ${value}`);
+                        return (<TextField
+                            label={key}
+                            name={key}
+                            value={value}
+                            onChange={handleInputChange}
+                            fullWidth
+                            margin="normal"
+                        />)
+                    })
+                }
+                <Button type="submit" variant="contained">Submit</Button>
+            </form>
+        </>
     );
 };
 
