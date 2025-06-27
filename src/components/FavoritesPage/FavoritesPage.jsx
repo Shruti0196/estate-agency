@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReusableHouseListCardView from '../ReusableHouseListCardView/ReusableHouseListCardView';
 import Header from '../Header/Header';
+import { lazy, Suspense } from 'react';
+const Home = lazy(() => import('../ReusableHouseListCardView/ReusableHouseListCardView'));
 
 function FavoritesPage() {
     const [houseData, setHouseData] = useState([]);
@@ -49,7 +51,8 @@ function FavoritesPage() {
     return (
         <>
             <Header />
-            <ReusableHouseListCardView pageType="favorites" houseData={houseData} />
+            <Suspense fallback={<div>Loading...</div>}>
+                <Home pageType="favorites" houseData={houseData} /></Suspense>
         </>
     );
 }

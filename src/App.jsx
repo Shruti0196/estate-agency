@@ -1,24 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import './App.css'
-import Header from './components/Header/Header'
-import HomePage from './components/HomePage/HomePage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import ViewHousePage from './components/ViewHousePage/ViewHousePage'
-import LandingPage from './components/LandingPage/LandingPage'
-import FavoritesPage from './components/FavoritesPage/FavoritesPage'
+import LandingPage from './components/LandingPage/LandingPage';
+import { lazy, Suspense } from 'react';
+
+const ReusableFav = lazy(() => import('./components/FavoritesPage/FavoritesPage'));
+const ViewHousePage = lazy(() => import('./components/ViewHousePage/ViewHousePage'));
+const HomePage = lazy(() => import('./components/HomePage/HomePage'));
+
 
 function App() {
-  const [data, setData] = useState([])
 
   return (
     <div>
       <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />}></Route>
-          <Route path="homePage/house/:id" element={<ViewHousePage />}></Route>
-          <Route path="homePage" element={<HomePage />}></Route>
-          <Route path="favorites" element={<FavoritesPage />}></Route>
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<LandingPage />}></Route>
+            <Route path="homePage/house/:id" element={<ViewHousePage />}></Route>
+            <Route path="homePage" element={<HomePage />}></Route>
+            <Route path="favorites" element={<ReusableFav />}></Route>
+          </Routes>
+        </Suspense>
       </Router>
 
     </div>
