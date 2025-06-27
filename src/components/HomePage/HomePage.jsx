@@ -7,10 +7,6 @@ import { useEffect } from 'react'
 import Filter from '../../utils/classes/Filter'
 import './HomePage.css'
 
-import { lazy, Suspense } from 'react';
-
-const ReusableHouse = lazy(() => import('../ReusableHouseListCardView/ReusableHouseListCardView'));
-
 function HomePage() {
     const [houseData, setHouseData] = useState([])
     const [filter, setFilter] = useState(new Filter())
@@ -102,11 +98,7 @@ function HomePage() {
                     placeholder="Enter max price"
                 />
             </div>
-            {/* <Suspense fallback={<div>Loading...</div>}> */}
-
-
-            {/* </Suspense> */}
-            <ReusableHouse houseData={houseData}></ReusableHouse>
+            <ReusableHouseListCardView houseData={houseData}></ReusableHouseListCardView>
         </>
     )
 }
